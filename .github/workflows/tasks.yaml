@@ -41,7 +41,7 @@ jobs:
       - name: 设置Bun
         uses: oven-sh/setup-bun@v2
         with:
-        bun-version: 'latest' # 或者指定具体版本，例如 '1.0.0'
+          bun-version: 'latest' # 或者指定具体版本，例如 '1.0.0'
 
       - name: 安装依赖
         run: bun install --frozen-lockfile
