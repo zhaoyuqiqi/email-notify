@@ -5,55 +5,51 @@ on:
     branches:
       - main
   schedule:
-    # 任务C：每10分钟执行一次
+    # 任务C：每30分钟
     - cron: '*/30 * * * *'
-    # 任务A：每1小时执行一次
+
+    # 未来你可以继续加
+    # 任务A：每1小时
     # - cron: '0 */1 * * *'
-    # # 任务B：每6小时执行一次
+    # 任务B：每6小时
     # - cron: '0 */6 * * *'
 
 jobs:
-  # 任务A：每1小时执行
-  # task-a:
-  #   name: 任务A - 每1小时
-  #   runs-on: ubuntu-latest
-  #   if: github.event.schedule == '0 */1 * * *'  # 只匹配这个cron时执行
-  #   steps:
-  #     - name: 执行任务A
-  #       run: echo "任务A执行 - 每1小时一次"
-
-  # # 任务B：每6小时执行
-  # task-b:
-  #   name: 任务B - 每6小时
-  #   runs-on: ubuntu-latest
-  #   if: github.event.schedule == '0 */6 * * *'
-  #   steps:
-  #     - name: 执行任务B
-  #       run: echo "任务B执行 - 每6小时一次"
-
-  # 任务C：每10分钟执行
-  task-c:
+  # ======================================
+  # 任务C：仅在 push 或 每30分钟定时 执行
+  # ======================================
+  test-cos:
     name: 检查COS是否合法
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' || github.event.schedule == '*/30 * * * *'
-      
+    if: github.event_name == 'push' || contains(github.event.schedule, '*/30 * * * *')
+
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-      - name: 设置Bun
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: 'latest' # 或者指定具体版本，例如 '1.0.0'
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install --frozen-lockfile
 
-      - name: 安装依赖
-        run: bun install --frozen-lockfile
-
-      - name: 运行任务COS检查
+      - name: 运行COS检查
         env:
-          # 读取生产环境专属密钥
           COS_AUTH_KEY: ${{ secrets.COS_AUTH_KEY }}
           MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
           MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
           MAIL_RECEIVER: ${{ secrets.MAIL_RECEIVER }}
         run: bun run src/tasks/test-cos.ts
-      
+
+  # ======================================
+  # 未来你加任务A（每1小时）就这样写
+  # ======================================
+  # task-a:
+  #   runs-on: ubuntu-latest
+  #   if: contains(github.event.schedule, '0 */1 * * *')
+  #   steps:
+  #     - run: echo "任务A 每1小时执行"
+
+  # ======================================
+  # 未来你加任务B（每6小时）就这样写
+  # ======================================
+  # task-b:
+  #   runs-on: ubuntu-latest
+  #   if: contains(github.event.schedule, '0 */6 * * *')
+  #   steps:
+  #     - run: echo "任务B 每6小时执行"
