@@ -40,7 +40,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-
       - name: 设置Bun
         uses: oven-sh/setup-bun@v2
         with:
@@ -50,5 +49,11 @@ jobs:
         run: bun install --frozen-lockfile
 
       - name: 运行任务COS检查
+        env:
+          # 读取生产环境专属密钥
+          COS_AUTH_KEY: ${{ secrets.COS_AUTH_KEY }}
+          MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
+          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+          MAIL_RECEIVER: ${{ secrets.MAIL_RECEIVER }}
         run: bun run src/tasks/test-cos.ts
       

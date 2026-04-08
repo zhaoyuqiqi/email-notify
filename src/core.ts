@@ -2,7 +2,6 @@ import nodemailer from "nodemailer";
 import config from "./config";
 
 const { MAIL_PASSWORD, MAIL_USERNAME, MAIL_RECEIVER } = config;
-console.log(config);
 const transporter = nodemailer.createTransport({
   host: "smtp.126.com",
   port: 465,
