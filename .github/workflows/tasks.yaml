@@ -1,0 +1,51 @@
+name: 定时任务集合
+
+on:
+  schedule:
+    # 任务C：每10分钟执行一次
+    - cron: '*/30 * * * *'
+    # 任务A：每1小时执行一次
+    # - cron: '0 */1 * * *'
+    # # 任务B：每6小时执行一次
+    # - cron: '0 */6 * * *'
+
+jobs:
+  # 任务A：每1小时执行
+  # task-a:
+  #   name: 任务A - 每1小时
+  #   runs-on: ubuntu-latest
+  #   if: github.event.schedule == '0 */1 * * *'  # 只匹配这个cron时执行
+  #   steps:
+  #     - name: 执行任务A
+  #       run: echo "任务A执行 - 每1小时一次"
+
+  # # 任务B：每6小时执行
+  # task-b:
+  #   name: 任务B - 每6小时
+  #   runs-on: ubuntu-latest
+  #   if: github.event.schedule == '0 */6 * * *'
+  #   steps:
+  #     - name: 执行任务B
+  #       run: echo "任务B执行 - 每6小时一次"
+
+  # 任务C：每10分钟执行
+  task-c:
+    name: 任务C - 每30分钟
+    runs-on: ubuntu-latest
+    if: github.event.schedule == '*/30 * * * *'
+      
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: 设置Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+        bun-version: 'latest' # 或者指定具体版本，例如 '1.0.0'
+
+      - name: 安装依赖
+        run: bun install --frozen-lockfile
+
+      - name: 运行任务COS检查
+        run: bun run src/test-cos.ts
+      
