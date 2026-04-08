@@ -33,7 +33,7 @@ jobs:
 
   # 任务C：每10分钟执行
   task-c:
-    name: 任务C - 每30分钟
+    name: 检查COS是否合法
     runs-on: ubuntu-latest
     if: github.event_name == 'push' || github.event.schedule == '*/30 * * * *'
       
@@ -50,5 +50,5 @@ jobs:
         run: bun install --frozen-lockfile
 
       - name: 运行任务COS检查
-        run: bun run src/test-cos.ts
+        run: bun run src/tasks/test-cos.ts
       
