@@ -1,6 +1,9 @@
 name: 定时任务集合
 
 on:
+  push:
+    branches:
+      - main
   schedule:
     # 任务C：每10分钟执行一次
     - cron: '*/30 * * * *'
@@ -32,7 +35,7 @@ jobs:
   task-c:
     name: 任务C - 每30分钟
     runs-on: ubuntu-latest
-    if: github.event.schedule == '*/30 * * * *'
+    if: github.event_name == 'push' || github.event.schedule == '*/30 * * * *'
       
     steps:
       - name: Checkout repository
