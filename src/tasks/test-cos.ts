@@ -12,9 +12,9 @@ function generateToken(data: Record<string, unknown>, secret: string) {
 }
 
 export async function main() {
-  const res = await fetch(`https://workers.19981105.xyz/common/get-cos-auth?authKey=${config.COS_AUTH_KEY}`,  {
+  const res = await fetch(`https://workers.19981105.xyz/common/get-cos-auth`,  {
     headers: {
-      'Authorization': `Bearer ${generateToken({}, config.COS_AUTH_KEY )}`
+      'Authorization': `Bearer ${await generateToken({}, config.COS_AUTH_KEY)}`
     }
   });
   const data = (await res.json()) as {
