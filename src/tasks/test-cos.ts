@@ -1,6 +1,6 @@
 import { SignJWT } from 'jose';
 
-import { sendEmail } from '../core';
+// import { sendEmail } from '../core';
 import config from '../config';
 
 function generateToken(data: Record<string, unknown>, secret: string) {
@@ -23,7 +23,8 @@ export async function main() {
     msg: string;
   };
   if (data.code !== 0) {
-    await sendEmail('获取 COS 授权失败', JSON.stringify(data));
+    throw new Error('获取 COS 授权失败'+ JSON.stringify(data) )
+    // await sendEmail('获取 COS 授权失败', JSON.stringify(data));
     return;
   }
   console.log('cos授权成功');
